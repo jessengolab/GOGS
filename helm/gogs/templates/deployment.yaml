@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+  namespace: {{ .Values.namespace }}
+  name: "{{ .Release.Name }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        role: {{ .Release.Name }}
+        environment: {{ .Values.environment }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.deployment.app.httpContainerPort }}
+            - containerPort: {{ .Values.deployment.app.sshContainerPort }}
+#          volumeMounts:
+#            - name: {{ .Release.Name }}-persistent-storage
+#              mountPath: {{ .Values.deployment.mountPath }}
+          env:
+            # https://github.com/gogits/gogs/tree/master/docker#container-options
+            - name: SOCAT_LINK
+              value: "false"
+          {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

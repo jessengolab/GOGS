@@ -1,0 +1,34 @@
+# Default values for postgres.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+restartPolicy: Always
+replicaCount: 1
+
+image:
+  repository: gogs/gogs
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+deployment:
+  mountPath: /var/lib/gogs/data
+  app:
+    httpContainerPort: 10080
+    sshContainerPort: 10022
+
+service:
+  app:
+    type: LoadBalancer
+    httpPort:
+      port: 10080
+      targetPort: 3000
+    sshPort:
+      port: 10022
+      targetPort: 22
+
+postgresql:
+  dbPassword: gog
+  userName: gog
+  dbName: gog

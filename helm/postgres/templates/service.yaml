@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+  name: "{{ .Release.Name }}"
+  namespace: {{ .Values.namespace }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.targetPort }}
+  selector:
+    role: {{ .Release.Name }}

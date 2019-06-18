@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    chart: {{ template "gogs.chart" . }}
+    release: {{ .Release.Name }}
+  name: "{{ .Release.Name }}"
+  namespace: {{ .Values.namespace }}
+spec:
+  type: {{ .Values.service.app.type }}
+  ports:
+  - name: http
+    port: {{ .Values.service.app.httpPort.port }}
+    targetPort: {{ .Values.service.app.httpPort.targetPort }}
+    protocol: TCP
+  - name: ssh
+    port: {{ .Values.service.app.sshPort.port }}
+    targetPort: {{ .Values.service.app.sshPort.targetPort }}
+    protocol: TCP
+  selector:
+    role: {{ .Release.Name }}

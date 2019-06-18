@@ -1,0 +1,25 @@
+# Default values for postgres.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+restartPolicy: Always
+replicaCount: 1
+
+image: postgres:9.6
+
+nameOverride: ""
+fullnameOverride: ""
+
+deployment:
+  containerPort: 5432
+  storageClass: "standard"
+  mountPath: /var/lib/postgresql/data
+
+service:
+  type: LoadBalancer
+  port: 5432
+  targetPort: 5432
+
+postgresql:
+  dbPassword: gog
+  userName: gog
+  dbName: gog
